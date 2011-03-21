@@ -9,9 +9,9 @@ Implemented: [BEP 3](http://bittorrent.org/beps/bep_0003.html), [BEP 23](http://
 Installation
 ------------
   
-  $ git clone 
-  $ bundle install
-  $ rackup -p 8888
+    $ git clone 
+    $ bundle install
+    $ rackup -p 8888
 
 
 License
