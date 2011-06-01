@@ -1,4 +1,5 @@
 doc
 *.gem
-Gemfile.lock
-var
+#Gemfile.lock
+tmp
+config

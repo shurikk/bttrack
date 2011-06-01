@@ -20,7 +20,8 @@ error do
 end
 
 get '/' do
-  
+  @version = `cat VERSION`
+  erb :index
 end
 
 get '/announce' do
@@ -49,3 +50,13 @@ get '/scrape' do
     req.info_hash.scrape).bencode
 end
 
+__END__
+@@ layout
+<html>
+  <body>
+   <%= yield %>
+  </body>
+</html>
+
+@@ index
+bttrack version <%= @version %>
