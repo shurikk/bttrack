@@ -20,7 +20,7 @@ error do
 end
 
 get '/' do
-  @version = `cat VERSION`
+  @version = `cat #{$BTTRACK_ROOT}/VERSION`
   erb :index
 end
 
