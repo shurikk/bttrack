@@ -21,6 +21,7 @@ end
 
 get '/' do
   @version = `cat #{$BTTRACK_ROOT}/VERSION`
+  @torrents_count = Dir.glob("#{CONF[:db_dir]}/*/*/*").size
   erb :index
 end
 
@@ -59,4 +60,5 @@ __END__
 </html>
 
 @@ index
-bttrack version <%= @version %>
+bttrack version <%= @version %><br/>
+tracking <%= @torrents_count %> torrent(s)
