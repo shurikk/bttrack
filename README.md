@@ -24,7 +24,7 @@ running on localhost, port 8888, using rack
     $ cd bttrack ; bundle install
     $ bundle exec rackup -p 8888
 
-or create a .torrent file and use http://btrack.heroku.com/announce as announce URL
+or create a .torrent file and use http://bttrack.heroku.com/announce as announce URL
 
 
 License
