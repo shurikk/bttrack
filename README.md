@@ -36,4 +36,4 @@ Released under the MIT license.
 Contributors
 ------------
 
-- Alexander Kabanov
+* [Alexander Kabanov](http://github.com/shurikk)
