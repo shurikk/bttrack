@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'bundler'
-require 'bttrack'
+require './bttrack'
 
 Bundler.require
 
