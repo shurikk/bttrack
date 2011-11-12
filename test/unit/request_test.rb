@@ -1,5 +1,5 @@
 
-require 'test/unit'
+require 'environment'
 require 'bttrack/config'
 require 'bttrack/request'
 

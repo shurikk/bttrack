@@ -15,7 +15,7 @@ module Bttrack
     def validate
       raise 'peer_id is missing' if @params[:peer_id].nil?
 
-      @id = @params[:peer_id].unpack('H*').to_s
+      @id = Array(@params[:peer_id].unpack('H*'))[0].to_s
 
       raise 'invalid peer_id' unless
         @id =~ /[\w\d]{40}/

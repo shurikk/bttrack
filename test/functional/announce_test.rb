@@ -1,5 +1,5 @@
 
-require 'test/environment'
+require 'environment.rb'
 require 'rack/test'
 require 'bttrack'
 

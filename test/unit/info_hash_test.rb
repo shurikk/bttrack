@@ -1,5 +1,5 @@
 
-require 'test/environment'
+require 'environment'
 require 'bttrack/config'
 require 'bttrack/info_hash'
 
