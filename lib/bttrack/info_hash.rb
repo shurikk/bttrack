@@ -6,12 +6,12 @@ module Bttrack
   class InfoHash
 
     attr_reader :id
-    
+
     def initialize(params)
       @params = params
       validate
     end
-    
+
     def validate
       raise 'info_hash is missing' if @params[:info_hash].nil?
 
@@ -20,7 +20,7 @@ module Bttrack
       raise 'invalid info_hash' unless
         @id =~ /[\w\d]{40}/
     end
-    
+
     def peers(args)
       {
         'interval' => CONF[:announce_interval],
@@ -29,7 +29,7 @@ module Bttrack
           peers_compact(args[:numwant]) : peers_dictionary(args)
       }
     end
-    
+
     # args: peer (peer_id, ip, port), downloaded, uploaded, left
     def event(args)
       peer = args[:peer]
@@ -51,19 +51,19 @@ module Bttrack
 
       cleanup
     end
-    
+
     # info_hash home dir
     def path
       path = "#{CONF[:db_dir]}/#{id[0..1]}/#{id[2..3]}/#{id}"
       `mkdir -p #{path}` unless File.directory?(path)
       path
     end
-    
+
     def peers_list_all
       Dir.chdir(path)
       Dir.glob('[a-z0-9]*').shuffle
     end
-    
+
     # num - number of entries to return
     def peers_list(num)
       peers_list_all[0..num].map do |peer_id|
@@ -72,14 +72,14 @@ module Bttrack
         hash
       end
     end
-    
+
     # num - number of entries requested
     def peers_compact(num)
       peers_list(num).map do |hash|
         [hash['ip'].to_i, hash['port'].to_i].pack('Nn')
       end.join
     end
-    
+
     # :numwant - number of peers requested
     # :no_peer_id - don't include peer_id in response
     def peers_dictionary(args)
@@ -89,9 +89,10 @@ module Bttrack
         d
       end
     end
-    
+
     def delete_peer(id)
       File.delete(id)
+    rescue Errno::ENOENT
     end
 
     def cleanup
@@ -103,20 +104,20 @@ module Bttrack
         Time.now - File.stat('.cleanup').mtime < CONF[:cleanup_interval]
 
       FileUtils.touch('.cleanup')
-      
+
       Dir.glob('[a-z0-9]*').map do |peer_id|
-        delete_peer(peer_id) unless 
+        delete_peer(peer_id) unless
           Time.now - File.stat(peer_id).mtime < CONF[:announce_interval]*2
       end
 
     end
 
     def scrape
-      
+
       # compile new .scrape file
       if !File.exists?('.scrape') ||
         Time.now - File.stat('.scrape').mtime > CONF[:scrape_interval]
-        
+
         # calculate
         scrape = peers_list_all.inject({
           'info_hash' => [id].pack('H*'),
@@ -125,7 +126,7 @@ module Bttrack
           'incomplete' => 0
         }) do |scrape,peer_id|
           hash = Marshal.load(File.open(peer_id, 'rb').read)
-          
+
           if hash['left'] == 0
             scrape['complete'] += 1
           else
@@ -143,7 +144,7 @@ module Bttrack
 
       scrape
     end
-    
+
     # scrape for all torrents
     def self.scrape
       Dir.glob("#{CONF[:db_dir]}/**/.scrape").map do |f|
