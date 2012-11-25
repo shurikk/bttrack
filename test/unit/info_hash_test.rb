@@ -4,7 +4,7 @@ require 'bttrack/config'
 require 'bttrack/info_hash'
 
 class InfoHashTest < Test::Unit::TestCase
-  
+
   def setup
     @req = Bttrack::Request.new(
       :info_hash => "\333\035\266\331Q\016x}\315r\261\253\006\234R\005\002\246\2362",
@@ -18,7 +18,13 @@ class InfoHashTest < Test::Unit::TestCase
     @info_hash = @req.info_hash
     @peer = @req.peer
   end
-  
+
+  def teardown
+    if File.exists?("#{@info_hash.path}/#{@peer.id}")
+      File.delete("#{@info_hash.path}/#{@peer.id}")
+    end
+  end
+
   def test_event
     @info_hash.event(
       :event => 'started',
@@ -27,7 +33,7 @@ class InfoHashTest < Test::Unit::TestCase
       :left => @req.left,
       :peer => @req.peer
     )
-    
+
     assert File.exists?("#{@info_hash.path}/#{@peer.id}")
     assert @info_hash.peers_dictionary(:numwant => 10, :no_peer_id => false)[0]['peer_id']
     assert @info_hash.peers_compact(10)
@@ -40,6 +46,13 @@ class InfoHashTest < Test::Unit::TestCase
     assert !File.exists?("#{@info_hash.path}/#{@peer.id}")
   end
 
+  def test_delete_missing_file
+    assert !File.exists?("#{@info_hash.path}/#{@peer.id}")
+    assert_nothing_raised Errno::ENOENT do
+      @info_hash.event :event => 'stopped',:peer => @peer
+    end
+  end
+
   def test_scrape
     @info_hash.event(
       :event => 'started',
@@ -48,7 +61,7 @@ class InfoHashTest < Test::Unit::TestCase
       :left => @req.left,
       :peer => @peer
     )
-    
+
     assert @info_hash.scrape['info_hash']
   end
 
@@ -60,7 +73,7 @@ class InfoHashTest < Test::Unit::TestCase
       :left => @req.left,
       :peer => @peer
     )
-    
+
     assert Bttrack::InfoHash.scrape[0]['info_hash']
   end
 end
