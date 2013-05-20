@@ -21,19 +21,28 @@ end
 
 get '/' do
   @version = `cat #{$BTTRACK_ROOT}/VERSION`
-  @torrents_count = Dir.glob("#{CONF[:db_dir]}/*/*/*").size
+  @torrents = Dir.glob("#{CONF[:db_dir]}/*/*/*")
   erb :index
+end
+
+get '/info/:id' do
+  @info_hash = Bttrack::InfoHash.new id: params[:id]
+  @peers = @info_hash.peers_list(100).map do |p|
+    p['ip'] = [24, 16, 8, 0].collect {|b| (p['ip'] >> b) & 255}.join('.')
+    p
+  end
+  erb :info
 end
 
 get '/announce' do
   info_hash = req.info_hash
-  
+
   peers = info_hash.peers(
     :compact => req.compact?,
     :no_peer_id => req.no_peer_id?,
     :numwant => req.numwant
   )
-  
+
   info_hash.event(
     :event => req.event,
     :downloaded => req.downloaded,
@@ -61,4 +70,19 @@ __END__
 
 @@ index
 bttrack version <%= @version %><br/>
-tracking <%= @torrents_count %> torrent(s)
+tracking <%= @torrents.size %> torrent(s)
+<ul>
+<% @torrents.each do |torrent| %>
+  <% torrent = torrent.split('/').last %>
+  <li><a href="/info/<%= torrent %>"><%= torrent %></a></li>
+<% end %>
+</ul>
+
+@@ info
+torrent: <%= @info_hash.id %><br/>
+peers:
+<ul>
+<% @peers.each do |peer| %>
+  <li><%= peer %></a></li>
+<% end %>
+</ul>

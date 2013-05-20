@@ -25,6 +25,10 @@ class InfoHashTest < Test::Unit::TestCase
     end
   end
 
+  def test_instanciate_by_id
+    @info_hash = Bttrack::InfoHash.new id: 'db1db6d9510e787dcd72b1ab069c520502a69e32'
+  end
+
   def test_event
     @info_hash.event(
       :event => 'started',

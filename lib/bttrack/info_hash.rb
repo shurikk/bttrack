@@ -13,12 +13,13 @@ module Bttrack
     end
 
     def validate
-      raise 'info_hash is missing' if @params[:info_hash].nil?
-
-      @id = Array(@params[:info_hash].unpack('H*'))[0].to_s
-
-      raise 'invalid info_hash' unless
-        @id =~ /[\w\d]{40}/
+      if @params[:id]
+        @id = @params[:id]
+      else
+        raise 'info_hash is missing' if @params[:info_hash].nil?
+        @id = Array(@params[:info_hash].unpack('H*'))[0].to_s
+      end
+      raise 'invalid info_hash' unless @id =~ /[\w\d]{40}/
     end
 
     def peers(args)
