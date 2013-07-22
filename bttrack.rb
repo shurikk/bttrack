@@ -50,15 +50,3 @@ get '/scrape' do
     Bttrack::InfoHash.scrape :
     req.info_hash.scrape).bencode
 end
-
-__END__
-@@ layout
-<html>
-  <body>
-   <%= yield %>
-  </body>
-</html>
-
-@@ index
-bttrack version <%= @version %><br/>
-tracking <%= @torrents_count %> torrent(s)
