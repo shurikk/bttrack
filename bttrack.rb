@@ -39,7 +39,6 @@ get '/announce' do
   failure 152, 'invalid numwant' if params['numwant'].to_i > CONF[:max_peers]
 
   info_hash = InfoHash.new params['info_hash']
-  failure 403, 'access denied, key mismatch' if info_hash.key_mismatch?(params)
 
   info_hash.event!({"ip" => request.ip}.merge(params))
   info_hash.announce(
@@ -52,7 +51,7 @@ end
 get '/scrape' do
   content_type 'text/plain'
   if params['info_hash']
-    failure 'invalid info_hash' if params['info_hash'].size != 20
+    failure 'invalid info_hash' if params['info_hash'].bytesize != 20
     InfoHash.new(params['info_hash']).scrape.bencode
   else
     InfoHash.scrape.bencode

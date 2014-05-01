@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe "GET /announce" do
@@ -154,44 +155,6 @@ describe "GET /announce" do
       peer = store.get_peer peer_id
       expect(peer).to include ip: '127.0.0.1', port: 6881
       expect(peer).to include downloaded: 512, uploaded: 0, left: 0
-    end
-  end
-
-  describe "peer identity protection (key)" do
-    context "with previous key" do
-      before { store.set_peer peer_id, key: 'secret' }
-
-      it "accepts request from authenticated client" do
-        get '/announce', args.merge(key: 'secret')
-        expect(last_response).to be_ok
-      end
-
-      it "reject request from unknown client" do
-        get '/announce', args.merge(key: 'wrong')
-        expect(last_response).to_not be_ok
-        expect(response).to include('failure reason' => 'access denied, key mismatch')
-      end
-
-      it "reject request from unauthenticated client" do
-        get '/announce', args
-        expect(last_response).to_not be_ok
-        expect(response).to include('failure reason' => 'access denied, key mismatch')
-      end
-    end
-
-    context "with no key set" do
-      it "accepts any request if no key is set" do
-        store.set_peer peer_id, ip: '42.5.4.3'
-        get '/announce', args.merge(key: 'toto')
-        expect(last_response).to be_ok
-      end
-
-      it "updates key if none was present" do
-        store.set_peer peer_id, ip: '42.5.4.3'
-        expect {
-          get '/announce', args.merge(key: 'toto')
-        }.to change { store.get_peer(peer_id)[:key] }.to 'toto'
-      end
     end
   end
 end

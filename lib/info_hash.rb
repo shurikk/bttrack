@@ -27,17 +27,10 @@ class InfoHash
     if params["event"] == 'stopped'
       store.delete_peer params['peer_id']
     else
-      store.set_peer params['peer_id'], ip: params["ip"], key: params["key"],
+      store.set_peer params['peer_id'], ip: params["ip"],
         downloaded: params["downloaded"].to_i, uploaded: params["uploaded"].to_i,
         left: params["left"].to_i, port: params["port"].to_i
     end
-  end
-
-  # verify peer's identity (key)
-  # if a key is known and differs from params, deny
-  def key_mismatch? params
-    peer = store.get_peer(params[:peer_id])
-    peer and peer[:key] and peer[:key] != params['key']
   end
 
   # https://wiki.theory.org/BitTorrentSpecification#Tracker_.27scrape.27_Convention
