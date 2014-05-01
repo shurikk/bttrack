@@ -1,88 +1,64 @@
 require 'sinatra'
+require 'bencode'
+require './lib/info_hash'
 
-$BTTRACK_ROOT = File.dirname(File.expand_path(__FILE__))
-$LOAD_PATH << "#{$BTTRACK_ROOT}/lib"
+CONF = {
+  compact_only: false,      # Only return peers in compact format
+  announce_interval: 600,   # Desired interval between announce
+  min_interval: 60,         # Min interval between announce
+  default_peers: 50,        # Default number of peers returned per announce
+  max_peers: 200,           # Max number of peers returned per announce
+  db_dir: "./tmp/torrents"  # Where to store database files
+}
 
-require 'bttrack/config'
-require 'bttrack/request'
-require 'config/config' if File.exists?("#{$BTTRACK_ROOT}/config/config.rb")
+set :db_dir, 'toto'
 
 helpers do
-  def req
-    Bttrack::Request.new(params.merge(
-      :remote_ip => request.ip
-    ))
+  def numwant
+    num = params[:numwant].to_i
+    num = CONF[:max_peers] if num > CONF[:max_peers]
+    num = CONF[:default_peers] if num <= 0
+    num
+  end
+
+  def failure code=400, reason
+    halt code, {'failure reason' => reason}.bencode
   end
 end
 
-error do
-  request.env['sinatra.error'].message
-end
-
 get '/' do
-  @version = `cat #{$BTTRACK_ROOT}/VERSION`
-  @torrents = Dir.glob("#{CONF[:db_dir]}/*/*/*")
+  @torrents = InfoHash.all
   erb :index
 end
 
 get '/info/:id' do
-  @info_hash = Bttrack::InfoHash.new id: params[:id]
-  @peers = @info_hash.peers_list(100).map do |p|
-    p['ip'] = [24, 16, 8, 0].collect {|b| (p['ip'] >> b) & 255}.join('.')
-    p
-  end
-  erb :info
+  @store = FileStore.new [params[:id]].pack('H*')
+  erb :show
 end
 
 get '/announce' do
-  info_hash = req.info_hash
+  content_type 'text/plain'
+  failure 'info_hash is missing' if params['info_hash'].nil?
+  failure 'peer_id is missing' if params['peer_id'].nil?
+  failure 'invalid info_hash' if params['info_hash'].size != 20
+  failure 'invalid peer_id' if params['peer_id'].size != 20
 
-  peers = info_hash.peers(
-    :compact => req.compact?,
-    :no_peer_id => req.no_peer_id?,
-    :numwant => req.numwant
-  )
+  info_hash = InfoHash.new params['info_hash']
+  failure 403, 'access denied, key mismatch' if info_hash.key_mismatch?(params)
 
-  info_hash.event(
-    :event => req.event,
-    :downloaded => req.downloaded,
-    :uploaded => req.uploaded,
-    :left => req.left,
-    :peer => req.peer
-  )
-
-  peers.bencode
+  info_hash.event!({"ip" => request.ip}.merge(params))
+  info_hash.announce(numwant: numwant,
+    compact: (params[:compact].to_i == 1 || CONF[:compact_only]),
+    no_peer_id: (params[:no_peer_id].to_i == 1)
+  ).bencode
 end
 
 get '/scrape' do
-  (request[:info_hash].nil? ? 
-    Bttrack::InfoHash.scrape :
-    req.info_hash.scrape).bencode
+  content_type 'text/plain'
+  if params['info_hash']
+    failure 'invalid info_hash' if params['info_hash'].size != 20
+    InfoHash.new(params['info_hash']).scrape.bencode
+  else
+    InfoHash.scrape.bencode
+  end
 end
-
-__END__
-@@ layout
-<html>
-  <body>
-   <%= yield %>
-  </body>
-</html>
-
-@@ index
-bttrack version <%= @version %><br/>
-tracking <%= @torrents.size %> torrent(s)
-<ul>
-<% @torrents.each do |torrent| %>
-  <% torrent = torrent.split('/').last %>
-  <li><a href="/info/<%= torrent %>"><%= torrent %></a></li>
-<% end %>
-</ul>
-
-@@ info
-torrent: <%= @info_hash.id %><br/>
-peers:
-<ul>
-<% @peers.each do |peer| %>
-  <li><%= peer %></a></li>
-<% end %>
-</ul>

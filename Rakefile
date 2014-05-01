@@ -1,17 +1,5 @@
+require 'rspec/core/rake_task'
 
-require 'rake/testtask'
-require 'rdoc/task'
+RSpec::Core::RakeTask.new(:spec)
 
-task :default => :test
-
-desc "Run all tests"
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test' << '.'
-  test.pattern = 'test/**/*_test.rb'
-  test.verbose = false
-end
-
-desc "Generate RDoc"
-Rake::RDocTask.new :doc do |rdoc|
-  rdoc.rdoc_dir = 'doc'
-end
+task :default => :spec

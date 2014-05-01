@@ -1,0 +1,10 @@
+torrent: <%= params[:id] %><br/>
+peers:
+<ul>
+<% @store.get_peers.each do |peer_id, peer| %>
+  <li>
+    <b><%= peer_id %></b>
+    <%= peer %>
+  </li>
+<% end %>
+</ul>
