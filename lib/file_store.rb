@@ -6,10 +6,10 @@ class FileStore
   end
 
   # Set or update peer's data
-  def set_peer peer_id, data, expires_in: CONF[:announce_interval] * 2
+  def set_peer peer_id, data
     PStore.new(file_path, ultra_safe: true).transaction do |store|
       store[:peers] ||= {}
-      store[:peers][peer_id] = data.merge(expires_at: Time.now + expires_in)
+      store[:peers][peer_id] = data.merge(expires_at: Time.now + CONF[:announce_interval] * 2)
     end
     clean_and_denorm!
   end
@@ -31,7 +31,7 @@ class FileStore
   end
 
   # get all peers for a torrent (read only)
-  def get_peers limit: nil
+  def get_peers limit = nil
     PStore.new(file_path).transaction(true) do |store|
       peers = store.fetch(:peers, {})
       peers = Hash[peers.to_a[0...limit]] if limit

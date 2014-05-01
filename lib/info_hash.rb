@@ -7,8 +7,8 @@ class InfoHash
   end
 
   # returns announce details with peer list
-  def announce compact: false, no_peer_id: false, numwant: CONF[:default_peers]
-    peer_list = store.get_peers(limit: numwant).map do |peer_id, peer|
+  def announce compact, no_peer_id, numwant
+    peer_list = store.get_peers(numwant).map do |peer_id, peer|
       if compact
         [IPAddr.new(peer[:ip]).to_i, peer[:port].to_i].pack('Nn')
       else

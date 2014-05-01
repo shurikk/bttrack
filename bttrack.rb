@@ -11,8 +11,6 @@ CONF = {
   db_dir: "./tmp/torrents"  # Where to store database files
 }
 
-set :db_dir, 'toto'
-
 helpers do
   def numwant
     num = params[:numwant].to_i
@@ -47,9 +45,10 @@ get '/announce' do
   failure 403, 'access denied, key mismatch' if info_hash.key_mismatch?(params)
 
   info_hash.event!({"ip" => request.ip}.merge(params))
-  info_hash.announce(numwant: numwant,
-    compact: (params[:compact].to_i == 1 || CONF[:compact_only]),
-    no_peer_id: (params[:no_peer_id].to_i == 1)
+  info_hash.announce(
+    params[:compact].to_i == 1 || CONF[:compact_only],
+    (params[:no_peer_id].to_i == 1),
+    numwant
   ).bencode
 end
 
