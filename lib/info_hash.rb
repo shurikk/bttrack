@@ -29,7 +29,7 @@ class InfoHash
     else
       store.set_peer params['peer_id'], ip: params["ip"], key: params["key"],
         downloaded: params["downloaded"].to_i, uploaded: params["uploaded"].to_i,
-        left: params["left"].to_i, port: (params["port"] || 6881).to_i
+        left: params["left"].to_i, port: params["port"].to_i
     end
   end
 

@@ -12,14 +12,7 @@ CONF = {
 }
 
 helpers do
-  def numwant
-    num = params[:numwant].to_i
-    num = CONF[:max_peers] if num > CONF[:max_peers]
-    num = CONF[:default_peers] if num <= 0
-    num
-  end
-
-  def failure code=400, reason
+  def failure code=900, reason
     halt code, {'failure reason' => reason}.bencode
   end
 end
@@ -36,10 +29,12 @@ end
 
 get '/announce' do
   content_type 'text/plain'
-  failure 'info_hash is missing' if params['info_hash'].nil?
-  failure 'peer_id is missing' if params['peer_id'].nil?
-  failure 'invalid info_hash' if params['info_hash'].size != 20
-  failure 'invalid peer_id' if params['peer_id'].size != 20
+  failure 101, 'info_hash is missing' if params['info_hash'].nil?
+  failure 102, 'peer_id is missing' if params['peer_id'].nil?
+  failure 103, 'port is missing' if params['port'].nil?
+  failure 150, 'invalid info_hash' if params['info_hash'].size != 20
+  failure 151, 'invalid peer_id' if params['peer_id'].size != 20
+  failure 152, 'invalid numwant' if params['numwant'].to_i > CONF[:max_peers]
 
   info_hash = InfoHash.new params['info_hash']
   failure 403, 'access denied, key mismatch' if info_hash.key_mismatch?(params)
@@ -47,8 +42,8 @@ get '/announce' do
   info_hash.event!({"ip" => request.ip}.merge(params))
   info_hash.announce(
     params[:compact].to_i == 1 || CONF[:compact_only],
-    (params[:no_peer_id].to_i == 1),
-    numwant
+    params[:no_peer_id].to_i == 1,
+    (params[:numwant] || CONF[:default_peers]).to_i
   ).bencode
 end
 
