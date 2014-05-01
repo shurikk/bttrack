@@ -1,8 +1,19 @@
-bttrack version <%= VERSION %><br/>
 
-tracking <%= @torrents.count %> torrent(s)
-<ul>
-<% @torrents.each do |torrent| %>
-  <li><a href="/info/<%= torrent.unpack('H*')[0] %>"><%= torrent.unpack('H*')[0] %></a></li>
-<% end %>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Tracked hashes (<%= @torrents.count %>)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @torrents.each do |torrent| %>
+      <tr>
+        <td class="hash">
+          <a href="/info/<%= torrent.unpack('H*')[0] %>">
+            <%= torrent.unpack('H*')[0] %>
+          </a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

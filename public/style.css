@@ -1,3 +1,49 @@
 html {
-  font-family: 'Helvetica';
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  color: #bbb;
+  font-size: 18px;
+  line-height: 1.4em;
+}
+
+section {
+  width: 800px;
+  margin: 0 auto;
+}
+
+header {
+  margin: 1.5em 0 1em 0;
+}
+
+strong {
+  color: black;
+}
+
+a {
+  color: #f40;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f50;
+  text-decoration: underline;
+}
+
+a:active {
+  color: #d30;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-weight: normal;
+  line-height: 3em;
+}
+
+.hash {
+  font-size: 0.9em;
+  font-family: "Ubuntu mono", Monaco, "Lucida Console", monospace;
 }
