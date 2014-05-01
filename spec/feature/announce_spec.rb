@@ -43,6 +43,12 @@ describe "GET /announce" do
       expect(last_response).to_not be_ok
       expect(response).to include('failure reason' => 'invalid numwant')
     end
+
+    it "counts properly UTF-8 chars" do
+      get '/announce', args.merge(info_hash: "Amq@\n*c\u001A\xB4\x8D\xBAo\xA6S\xABǌ\u0001\x8D\xBA")
+      expect(last_response).to be_ok
+      expect(response).not_to include('failure reason')
+    end
   end
 
   describe "returns peers" do

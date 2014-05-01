@@ -11,6 +11,8 @@ CONF = {
   db_dir: "./tmp/torrents"  # Where to store database files
 }
 
+VERSION = File.read('VERSION')
+
 helpers do
   def failure code=900, reason
     halt code, {'failure reason' => reason}.bencode
@@ -32,8 +34,8 @@ get '/announce' do
   failure 101, 'info_hash is missing' if params['info_hash'].nil?
   failure 102, 'peer_id is missing' if params['peer_id'].nil?
   failure 103, 'port is missing' if params['port'].nil?
-  failure 150, 'invalid info_hash' if params['info_hash'].size != 20
-  failure 151, 'invalid peer_id' if params['peer_id'].size != 20
+  failure 150, 'invalid info_hash' if params['info_hash'].bytesize != 20
+  failure 151, 'invalid peer_id' if params['peer_id'].bytesize != 20
   failure 152, 'invalid numwant' if params['numwant'].to_i > CONF[:max_peers]
 
   info_hash = InfoHash.new params['info_hash']
