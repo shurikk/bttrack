@@ -1,7 +1,7 @@
 <% peers = @store.get_peers %>
 <% size = peers.map {|_, p| p[:left].to_i+p[:downloaded].to_i}.max %>
 <header>
-  <a href="/">bttrack</a> » <code><%= params[:id] %></code>
+  <a href="/">bttrack</a> » <code><%= @store.info_hash.unpack('H*')[0] %></code>
   <% if size %>(<%= size_format(size) %>)<% end %>
 </header>
 <table>
@@ -20,10 +20,12 @@
           <code><%= peer_id.unpack('H*')[0] %></code>
         </td>
         <td>
-          <%= peer[:ip] %>
+          <%= peer[:ip] %>:<%= peer[:port] %>
         </td>
         <td class="downloaded">
-          <%= peer[:downloaded].to_i * 100 / (peer[:downloaded].to_i + peer[:left].to_i) %> %
+          <% if total = (peer[:downloaded].to_i + peer[:left].to_i) > 0 %>
+            <%= peer[:downloaded].to_i * 100 / (peer[:downloaded].to_i + peer[:left].to_i) %> <sub>%</sub>
+          <% end %>
         </td>
         <td class="uploaded">
           <%= size_format(peer[:uploaded].to_i) %>
