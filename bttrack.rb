@@ -14,7 +14,7 @@ CONF = {
 VERSION = File.read('VERSION')
 
 helpers do
-  def failure code=900, reason
+  def failure code=400, reason
     halt code, {'failure reason' => reason}.bencode
   end
 end
@@ -31,12 +31,12 @@ end
 
 get '/announce' do
   content_type 'text/plain'
-  failure 101, 'info_hash is missing' if params['info_hash'].nil?
-  failure 102, 'peer_id is missing' if params['peer_id'].nil?
-  failure 103, 'port is missing' if params['port'].nil?
-  failure 150, 'invalid info_hash' if params['info_hash'].bytesize != 20
-  failure 151, 'invalid peer_id' if params['peer_id'].bytesize != 20
-  failure 152, 'invalid numwant' if params['numwant'].to_i > CONF[:max_peers]
+  failure 'info_hash is missing' if params['info_hash'].nil?
+  failure 'peer_id is missing' if params['peer_id'].nil?
+  failure 'port is missing' if params['port'].nil?
+  failure 'invalid info_hash' if params['info_hash'].bytesize != 20
+  failure 'invalid peer_id' if params['peer_id'].bytesize != 20
+  failure 'invalid numwant' if params['numwant'].to_i > CONF[:max_peers]
 
   info_hash = InfoHash.new params['info_hash']
 
