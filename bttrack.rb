@@ -17,6 +17,16 @@ helpers do
   def failure code=400, reason
     halt code, {'failure reason' => reason}.bencode
   end
+
+  def size_format size
+    if size > (10**12)
+      "%.3g <sub>TB</sub>" % (size.to_f / 10**12)
+    elsif size > (10**9)
+      "%.3g <sub>GB</sub>" % (size.to_f / 10**9)
+    else
+      "%.3g <sub>MB</sub>" % (size.to_f / 10**6)
+    end
+  end
 end
 
 get '/' do
@@ -24,8 +34,8 @@ get '/' do
   erb :index
 end
 
-get '/info/:id' do
-  @store = FileStore.new [params[:id]].pack('H*')
+get %r{/([0-9a-f]{40})} do
+  @store = FileStore.new params[:captures].pack('H*')
   erb :show
 end
 

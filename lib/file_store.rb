@@ -1,6 +1,9 @@
 require 'pstore'
+require 'pathname'
 
 class FileStore
+  attr_reader :info_hash
+
   def initialize info_hash
     @info_hash = info_hash
   end

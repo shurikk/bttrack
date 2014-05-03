@@ -1,10 +1,34 @@
-torrent: <%= params[:id] %><br/>
-peers:
-<ul>
-<% @store.get_peers.each do |peer_id, peer| %>
-  <li>
-    <b><%= peer_id %></b>
-    <%= peer %>
-  </li>
-<% end %>
-</ul>
+<% peers = @store.get_peers %>
+<% size = peers.map {|_, p| p[:left].to_i+p[:downloaded].to_i}.max %>
+<header>
+  <a href="/">bttrack</a> » <code><%= params[:id] %></code>
+  <% if size %>(<%= size_format(size) %>)<% end %>
+</header>
+<table>
+  <thead>
+    <tr>
+      <th>Peers (<%= peers.count %>)</th>
+      <th>IP</th>
+      <th class="downloaded">Status</th>
+      <th class="uploaded">Uploaded</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% peers.each do |peer_id, peer| %>
+      <tr>
+        <td>
+          <code><%= peer_id.unpack('H*')[0] %></code>
+        </td>
+        <td>
+          <%= peer[:ip] %>
+        </td>
+        <td class="downloaded">
+          <%= peer[:downloaded].to_i * 100 / (peer[:downloaded].to_i + peer[:left].to_i) %> %
+        </td>
+        <td class="uploaded">
+          <%= size_format(peer[:uploaded].to_i) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
