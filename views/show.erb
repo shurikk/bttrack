@@ -2,7 +2,7 @@
 <% size = peers.map {|_, p| p[:left].to_i+p[:downloaded].to_i}.max %>
 <header>
   <a href="/">bttrack</a> » <code><%= @store.info_hash.unpack('H*')[0] %></code>
-  <% if size %>(<%= size_format(size) %>)<% end %>
+  <% if size and size > 0 %>(<%= size_format(size) %>)<% end %>
 </header>
 <table>
   <thead>
@@ -25,6 +25,8 @@
         <td class="downloaded">
           <% if total = (peer[:downloaded].to_i + peer[:left].to_i) > 0 %>
             <%= peer[:downloaded].to_i * 100 / (peer[:downloaded].to_i + peer[:left].to_i) %> <sub>%</sub>
+          <% else %>
+            100 <sub>%<sub>
           <% end %>
         </td>
         <td class="uploaded">
