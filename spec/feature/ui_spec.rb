@@ -10,15 +10,17 @@ describe "GET /" do
   end
 
   it "shows torrent details table" do
-    FileStore.new("info_hash_abcdefghij").set_peer "abcd", downloaded: 9876
+    FileStore.new("info_hash_abcdefghij").set_peer "abcd", left: 9876
     FileStore.new("info_hash_1234567890").set_peer "abcd", {}
     get '/'
     expect(last_response).to be_ok
     expect(last_response.body).to include "Torrents (2)"
     expect(last_response.body).to include "4353637383930" # torrent 1
     expect(last_response.body).to include "465666768696a" # torrent 2
-    expect(last_response.body).to match /seed.+1.+leech.+0/m
-    expect(last_response.body).to match /seed.+0.+leech.+1/m
+    expect(last_response.body).to match /seed[">\n ]+1/m
+    expect(last_response.body).to match /leech[">\n ]+0/m
+    expect(last_response.body).to match /seed[">\n ]+0/m
+    expect(last_response.body).to match /leech[">\n ]+1/m
   end
 end
 
