@@ -3,37 +3,27 @@ Ruby/Sinatra BitTorrent Tracker
 
 Simple [BitTorrent](http://bittorrent.org/) tracker using [Sinatra](http://www.sinatrarb.com/) that doesn't require database backend
 
-Implemented: [BEP 3](http://bittorrent.org/beps/bep_0003.html), [BEP 23](http://bittorrent.org/beps/bep_0023.html)
-
-
-Thoughts
---------
-
-In general idea is to run multiple torrent trackers (for redundancy) + fancy
-command line torrent clients that know how to share .torrent files with each
-other as a bittorrent based storage that is somewhat similar to [amazon S3](https://s3.amazonaws.com/)
-and others.
-
+Implements [BEP 3](http://bittorrent.org/beps/bep_0003.html) and [BEP 23](http://bittorrent.org/beps/bep_0023.html)
 
 Installation
 ------------
- 
-running on localhost, port 8888, using rack
+
+Running on localhost:
 
     $ git clone git://github.com/shurikk/bttrack.git
-    $ cd bttrack ; bundle install
-    $ bundle exec rackup -p 8888
+    $ cd bttrack
+    $ bundle install
+    $ bundle exec rackup
 
-or create a .torrent file and use http://bttrack.heroku.com/announce as announce URL
+You can also use my public heroku instance: create a .torrent file and use http://bttrack.heroku.com/announce as announce URL.
 
+Configuration
+-------------
 
-License
--------
-
-Released under the MIT license.
-
+Configuration options are available at the top of `bttrack.rb`
 
 Contributors
 ------------
 
 * [Alexander Kabanov](http://github.com/shurikk)
+* [Adrien Jarthon](http://github.com/jarthod)

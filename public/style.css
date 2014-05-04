@@ -1,0 +1,94 @@
+html {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  color: #bbb;
+  font-size: 16px;
+  line-height: 1.4em;
+}
+
+section {
+  width: 650px;
+  margin: 0 auto;
+  padding: 2em 0;
+}
+
+a {
+  color: #777;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f40;
+}
+
+a:active {
+  color: #d30;
+}
+
+sub {
+  vertical-align: baseline;
+}
+
+header {
+  margin-bottom: 1em;
+}
+
+header a {
+  font-size: 1.2em;
+  color: black;
+  font-weight: bold;
+}
+
+header a:hover {
+  text-decoration: none;
+  color: #f40;
+}
+
+.github {
+  float: right;
+  font-size: 0.8em;
+}
+
+strong {
+  color: black;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  line-height: 3em;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  border-bottom: 1px solid #eee;
+}
+
+tr:first-child td {
+  padding-top: 1em;
+}
+
+code {
+  font-size: 0.9em;
+  font-family: Monaco, "Lucida Console", monospace;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.seed {
+  text-align: right;
+  padding-right: 1em;
+}
+
+.uploaded, .downloaded {
+  text-align: right;
+}
+
+tbody .seed {
+  color: #6c2;
+}
+
+tbody .leech {
+  color: #d30;
+}

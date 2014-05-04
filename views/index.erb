@@ -1,0 +1,31 @@
+<a href="https://github.com/shurikk/bttrack" class='github' target='blank'>GitHub ↗</a>
+<header>
+  <a href="/">bttrack</a> – <%= VERSION %>
+</header>
+<table>
+  <thead>
+    <tr>
+      <th>Torrents (<%= @torrents.count %>)</th>
+      <th class="seed">Seed</th>
+      <th class="leech">Leech</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @torrents.each do |torrent| %>
+      <% store = FileStore.new torrent %>
+      <tr>
+        <td>
+          <code><a href="/<%= torrent.unpack('H*')[0] %>">
+            <%= torrent.unpack('H*')[0] %>
+          </a></code>
+        </td>
+        <td class="seed">
+          <%= store.get_stats[:complete] %>
+        </id>
+        <td class="leech">
+          <%= store.get_stats[:incomplete] %>
+        </id>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
