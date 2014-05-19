@@ -13,11 +13,9 @@ describe "GET /scrape" do
   end
 
   it "counts properly UTF-8 chars" do
-    pending "waiting for bencode fix to be deployed" do
-      get '/scrape', info_hash: "Amq@\n*c\u001A\xB4\x8D\xBAo\xA6S\xABǌ\u0001\x8D\xBA"
-      expect(last_response).to be_ok
-      expect(response).not_to include('failure reason')
-    end
+    get '/scrape', info_hash: "Amq@\n*c\u001A\xB4\x8D\xBAo\xA6S\xABǌ\u0001\x8D\xBA"
+    expect(last_response).to be_ok
+    expect(response).not_to include('failure reason')
   end
 
   it "returns stats for one hash" do
