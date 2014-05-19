@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    bencode (0.8.0)
+    bencode (0.8.1)
     diff-lcs (1.2.5)
     rack (1.5.2)
     rack-protection (1.5.3)
