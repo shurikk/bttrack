@@ -5,6 +5,8 @@ Simple [BitTorrent](http://bittorrent.org/) tracker using [Sinatra](http://www.s
 
 Implements [BEP 3](http://bittorrent.org/beps/bep_0003.html) and [BEP 23](http://bittorrent.org/beps/bep_0023.html)
 
+[![Build Status](https://travis-ci.org/shurikk/bttrack.svg?branch=master)](https://travis-ci.org/shurikk/bttrack)
+
 Installation
 ------------
 
@@ -15,7 +17,7 @@ Running on localhost:
     $ bundle install
     $ bundle exec rackup
 
-You can also use my public heroku instance: create a .torrent file and use http://bttrack.heroku.com/announce as announce URL.
+You can also use a demo instance: create a .torrent file and use http://bttrack.herokuapp.com/announce as announce URL.
 
 Configuration
 -------------
