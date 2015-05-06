@@ -6,14 +6,13 @@ html {
 }
 
 section {
-  width: 650px;
+  width: 860px;
   margin: 0 auto;
   padding: 2em 0;
 }
 
 a {
   color: #777;
-  text-decoration: none;
 }
 
 a:hover {
@@ -39,7 +38,6 @@ header a {
 }
 
 header a:hover {
-  text-decoration: none;
   color: #f40;
 }
 
@@ -63,6 +61,10 @@ th {
   text-transform: uppercase;
   font-size: 0.8em;
   border-bottom: 1px solid #eee;
+}
+
+th.seed, th.leech {
+  width: 10%;
 }
 
 tr:first-child td {

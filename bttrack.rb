@@ -36,6 +36,7 @@ end
 
 get %r{/([0-9a-f]{40})} do
   @store = FileStore.new params[:captures].pack('H*')
+  @tr = request.url.gsub /#{@store.info_hash.unpack('H*')[0]}$/, 'announce'
   erb :show
 end
 
