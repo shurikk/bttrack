@@ -5,7 +5,7 @@ GEM
     diff-lcs (1.2.5)
     kgio (2.9.2)
     mustermann (1.0.2)
-    rack (2.0.4)
+    rack (2.0.8)
     rack-protection (2.0.1)
       rack
     rack-test (0.6.2)
