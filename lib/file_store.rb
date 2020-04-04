@@ -10,7 +10,7 @@ class FileStore
 
   # Set or update peer's data
   def set_peer peer_id, data
-    PStore.new(file_path, ultra_safe: true).transaction do |store|
+    PStore.new(file_path, thread_safe: true).transaction do |store|
       store[:peers] ||= {}
       store[:peers][peer_id] = data.merge(expires_at: Time.now + CONF[:announce_interval] * 2)
     end
@@ -19,7 +19,7 @@ class FileStore
 
   # delete given peer
   def delete_peer peer_id
-    PStore.new(file_path, ultra_safe: true).transaction do |store|
+    PStore.new(file_path, thread_safe: true).transaction do |store|
       (store[:peers] || {}).delete peer_id
     end
     clean_and_denorm!
@@ -64,7 +64,7 @@ class FileStore
   private
 
   def clean_and_denorm!
-    count = PStore.new(file_path, ultra_safe: true).transaction do |store|
+    count = PStore.new(file_path, thread_safe: true).transaction do |store|
       if peers = store[:peers]
         peers.delete_if { |id, peer| peer[:expires_at] < Time.now }
         store[:stats] ||= {}
