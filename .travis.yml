@@ -1,8 +1,11 @@
 language: ruby
 
+dist: bionic
 rvm:
-  - 1.9.3
-  - 2.1.1
+  - 2.4.9
+  - 2.5.7
+  - 2.6.5
+  - 2.7.1
   - ruby-head
-#  - jruby
-#  - rbx
+before_install:
+  - gem install bundler

@@ -1,5 +1,6 @@
 doc
 *.gem
 tmp
+log
 config
 *.swp

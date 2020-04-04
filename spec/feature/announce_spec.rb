@@ -66,6 +66,7 @@ describe "GET /announce" do
       # TODO: content type text
       expect(response).to include('interval' => 600)
       expect(response).to include('min interval' => 60)
+      expect(response['peers'].size).to eq(3)
       expect(response).to include('peers' => [
         {'ip' => '42.5.4.3', 'peer id' => 'abcd', 'port' => 432},
         {'ip' => '22.5.4.8', 'peer id' => 'efgh', 'port' => 431},
@@ -94,6 +95,7 @@ describe "GET /announce" do
 
     it "excluding peer id if asked" do
       get '/announce', args.merge(no_peer_id: 1)
+      expect(response['peers'].size).to eq(3)
       expect(response).to include('peers' => [
         {'ip' => '42.5.4.3', 'port' => 432},
         {'ip' => '22.5.4.8', 'port' => 431},
