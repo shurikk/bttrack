@@ -1,3 +1,5 @@
+Please use https://github.com/jarthod/bttrack fork
+
 Ruby/Sinatra BitTorrent Tracker
 ===============================
 
